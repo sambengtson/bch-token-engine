@@ -1,0 +1,22 @@
+{
+  "name": "bch-token-engine",
+  "version": "1.0.0",
+  "description": "-environment variables-\r price - Indicates the price in USD that you would like to charge in exchange for creating tokens (Automatically converted to BCH value)\r production - Will switch between test and mainnet as well as host the website",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-validator": "^5.3.0",
+    "mocha": "^5.2.0",
+    "mongodb": "^3.1.8"
+  }
+}
