@@ -1,4 +1,4 @@
-module.exports = class FixedToken {
+class FixedToken {
     constructor() {
         this.Precision = 0;
         this.Category = '';
@@ -15,5 +15,15 @@ module.exports = class FixedToken {
         this.Network = 'mainnet';
         this.OneTimeWif = '';
         this.OneTimeAddr = '';
+        this.Price = 0;
     }
 }
+
+class FixedTokenResponse {
+    constructor() {
+        this.Address = '';
+        this.BchAmount = 0;
+    }
+}
+
+module.exports = {FixedToken, FixedTokenResponse};

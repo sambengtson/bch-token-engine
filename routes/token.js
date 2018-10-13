@@ -3,7 +3,11 @@ const {
 } = require('express-validator/check')
 const mongo = require('../utilities/db')
 
-const FixedToken = require('../models/tokens')
+const {
+    FixedToken, FixedTokenResponse
+} = require('../models/tokens')
+
+const price = require('../controllers/price');
 const global = require('../utilities/globals');
 const BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
 const BITBOX = new BITBOXSDK();
@@ -50,15 +54,20 @@ module.exports.SetRoutes = (app) => {
             let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic)
             let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, fixedToken.Network)
             const wif = BITBOX.HDNode.toWIF(masterHDNode);
-            const address = BITBOX.HDNode.toLegacyAddress(masterHDNode);
+            const address = BITBOX.HDNode.toCashAddress(masterHDNode);
 
             fixedToken.OneTimeWif = wif;
-            fixedToken.OneTimeAddr = address;
+            fixedToken.OneTimeAddr = BITBOX.HDNode.toLegacyAddress(masterHDNode);;
 
+            const response = new FixedTokenResponse();
+            response.Address = address;
+            response.BchAmount = await price.GetTokenCreationPrice();
+            fixedToken.Price = response.BchPrice;
 
             const collection = mongo.db.collection('tokenrequests');
             await collection.insertOne(fixedToken);
-            res.send();
+
+            res.send(response);
         } catch (err) {
             console.log(err)
             res.status(500).send('Internal server error');
