@@ -4,6 +4,11 @@ const {
 const mongo = require('../utilities/db')
 
 const FixedToken = require('../models/tokens')
+const global = require('../utilities/globals');
+const BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
+const BITBOX = new BITBOXSDK();
+const uuidv4 = require('uuid/v4');
+
 
 module.exports.SetRoutes = (app) => {
 
@@ -20,9 +25,39 @@ module.exports.SetRoutes = (app) => {
             fixedToken = req.body;
             fixedToken.Paid = false;
             fixedToken.Issued = false;
+            if (!global.isProduction()) {
+                fixedToken.Network = 'testnet';
+            }
+
+            if (fixedToken.Network === 'testnet') {
+                if (!BITBOX.Address.isTestnetAddress(fixedToken.CoinbaseAddress)) {
+                    res.status(400).send('Address is not a testnet address');
+                    return;
+                }
+            } else {
+                if (!BITBOX.Address.isMainnetAddresss(fixedToken.CoinbaseAddress)) {
+                    res.status(400).send('Address is not a mainnet address');
+                    return;
+                }
+            }
+
+            let langs = [
+                'english'
+            ]
+
+            let lang = langs[Math.floor(Math.random() * langs.length)];
+            let mnemonic = BITBOX.Mnemonic.generate(256, BITBOX.Mnemonic.wordLists()[lang])
+            let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic)
+            let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, fixedToken.Network)
+            const wif = BITBOX.HDNode.toWIF(masterHDNode);
+            const address = BITBOX.HDNode.toLegacyAddress(masterHDNode);
+
+            fixedToken.OneTimeWif = wif;
+            fixedToken.OneTimeAddr = address;
+
 
             const collection = mongo.db.collection('tokenrequests');
-            const result = await collection.insertOne(fixedToken);
+            await collection.insertOne(fixedToken);
             res.send();
         } catch (err) {
             console.log(err)
@@ -41,12 +76,6 @@ function validateToken(req) {
     });
     req.checkBody('SubCategory').optional().isString();
     req.checkBody('Name').exists().isString().isLength({
-        min: 1
-    });
-    req.checkBody('Url').exists().isString().isLength({
-        min: 10
-    });
-    req.checkBody('Data').exists().isString().isLength({
         min: 1
     });
     req.checkBody('Amount').exists().isInt({

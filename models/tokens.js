@@ -4,11 +4,16 @@ module.exports = class FixedToken {
         this.Category = '';
         this.SubCategory = '';
         this.Name = '';
-        this.Url = '';
-        this.Data = '';
+        this.Url = 'https://whctokens.cash';
+        this.Data = 'Token created with whctokens.cash!';
         this.Amount = 0;
         this.CoinbaseAddress = ''
         this.Paid = false;
+        this.PaidTx = '';
+        this.IssueTx = '';
         this.Issued = false;
+        this.Network = 'mainnet';
+        this.OneTimeWif = '';
+        this.OneTimeAddr = '';
     }
 }

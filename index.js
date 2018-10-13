@@ -1,7 +1,7 @@
 const express = require('express')
 const expressValidator = require('express-validator');
 const app = express()
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const port = 8080
 
 const global = require('./utilities/globals');

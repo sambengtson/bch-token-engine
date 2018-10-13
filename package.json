@@ -13,10 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bitbox-sdk": "^2.0.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "express-validator": "^5.3.0",
     "mocha": "^5.2.0",
-    "mongodb": "^3.1.8"
+    "mongodb": "^3.1.8",
+    "uuid": "^3.3.2"
   }
 }
