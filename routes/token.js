@@ -1,17 +1,10 @@
 const {
     body
 } = require('express-validator/check')
-const mongo = require('../utilities/db')
-
+const tokenCtrl = require('../controllers/tokens');
 const {
-    FixedToken, FixedTokenResponse
+    FixedToken
 } = require('../models/tokens')
-
-const price = require('../controllers/price');
-const global = require('../utilities/globals');
-const BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
-const BITBOX = new BITBOXSDK();
-const uuidv4 = require('uuid/v4');
 
 
 module.exports.SetRoutes = (app) => {
@@ -29,48 +22,12 @@ module.exports.SetRoutes = (app) => {
             fixedToken = req.body;
             fixedToken.Paid = false;
             fixedToken.Issued = false;
-            if (!global.isProduction()) {
-                fixedToken.Network = 'testnet';
-            }
 
-            if (fixedToken.Network === 'testnet') {
-                if (!BITBOX.Address.isTestnetAddress(fixedToken.CoinbaseAddress)) {
-                    res.status(400).send('Address is not a testnet address');
-                    return;
-                }
-            } else {
-                if (!BITBOX.Address.isMainnetAddresss(fixedToken.CoinbaseAddress)) {
-                    res.status(400).send('Address is not a mainnet address');
-                    return;
-                }
-            }
-
-            let langs = [
-                'english'
-            ]
-
-            let lang = langs[Math.floor(Math.random() * langs.length)];
-            let mnemonic = BITBOX.Mnemonic.generate(256, BITBOX.Mnemonic.wordLists()[lang])
-            let rootSeed = BITBOX.Mnemonic.toSeed(mnemonic)
-            let masterHDNode = BITBOX.HDNode.fromSeed(rootSeed, fixedToken.Network)
-            const wif = BITBOX.HDNode.toWIF(masterHDNode);
-            const address = BITBOX.HDNode.toCashAddress(masterHDNode);
-
-            fixedToken.OneTimeWif = wif;
-            fixedToken.OneTimeAddr = BITBOX.HDNode.toLegacyAddress(masterHDNode);;
-
-            const response = new FixedTokenResponse();
-            response.Address = address;
-            response.BchAmount = await price.GetTokenCreationPrice();
-            fixedToken.Price = response.BchPrice;
-
-            const collection = mongo.db.collection('tokenrequests');
-            await collection.insertOne(fixedToken);
-
+            const response = await tokenCtrl.RecordFixedTokenReq(fixedToken);
             res.send(response);
         } catch (err) {
             console.log(err)
-            res.status(500).send('Internal server error');
+            res.status(500).send(err);
         }
     })
 }

@@ -11,4 +11,3 @@ MongoClient.connect(url, function (err, client) {
     module.exports.db = client.db('token-engine');
 });
 
-//module.exports.db = db;

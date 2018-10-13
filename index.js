@@ -6,6 +6,9 @@ const port = 8080
 
 const global = require('./utilities/globals');
 
+let BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
+let BITBOX = new BITBOXSDK();
+
 /* Routes */
 const price = require('./routes/prices');
 const token = require('./routes/token');
@@ -26,3 +29,13 @@ price.SetRoutes(app);
 token.SetRoutes(app);
 
 app.listen(port, () => console.log(`Listening on port ${port}!`))
+
+let mainnetSocket = new BITBOX.Socket({callback: () => {console.log('connected')}, restURL: 'https://rest.bitcoin.com'})
+mainnetSocket.listen('transactions', (message) => {
+  
+});
+
+let testnetSocket = new BITBOX.Socket({callback: () => {console.log('connected')}, restURL: 'https://trest.bitcoin.com'})
+mainnetSocket.listen('transactions', (message) => {
+  
+});
