@@ -44,21 +44,25 @@ module.exports.IssueFixedToken = async (fixedToken) => {
             return;
         }
 
-        let fixed = await wormhole.PayloadCreation.fixed(1, 1, 0, fixedToken.Category, fixedToken.Category, fixedToken.Name, "whctokens.cash", "Created by whctokens.cash!", fixedToken.Amount.toString());
-        let utxo = await BITBOX.Address.utxo([address]);
-        utxo = findBiggestUtxo(utxo);
+        const fixed = await wormhole.PayloadCreation.fixed(1, 1, 0, fixedToken.Category, fixedToken.Category, fixedToken.Name, "whctokens.cash", "Created by whctokens.cash!", fixedToken.Amount.toString());
+        const utxo = await BITBOX.Address.utxo([address]);
+        const theUTXO = findBiggestUtxo(utxo[0]);
 
-        utxo.value = utxo.amount;
-        let rawTx = await wormhole.RawTransactions.create([utxo], {});
+        let rawTx = await wormhole.RawTransactions.create(theUTXO, {});
         let opReturn = await wormhole.RawTransactions.opReturn(rawTx, fixed);
         let ref = await wormhole.RawTransactions.reference(opReturn, fixedToken.CoinbaseAddress);
-        let changeHex = await wormhole.RawTransactions.change(ref, [utxo], address, 0.00001);
+        let changeHex = await wormhole.RawTransactions.change(ref, theUTXO, address, 0.00001);
 
         let tx = wormhole.Transaction.fromHex(changeHex)
         let tb = wormhole.Transaction.fromTransaction(tx)
 
+        let sats = 0;
+        for (const tx of theUTXO) {
+            sats += tx.satoshis;
+        }
+
         let redeemScript;
-        tb.sign(0, ecPair, redeemScript, 0x01, utxo[0][0].satoshis);
+        tb.sign(0, ecPair, redeemScript, 0x01, sats);
         let builtTx = tb.build()
         let txHex = builtTx.toHex();
 
@@ -74,6 +78,8 @@ module.exports.IssueFixedToken = async (fixedToken) => {
 
         Your wallet has been credited with ${fixedToken.Amount} tokens.
         `
+
+        email.SendEmail(fixedToken.Email, msg)
 
     } catch (err) {
         //Notify somebody
