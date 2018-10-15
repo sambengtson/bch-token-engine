@@ -18,6 +18,8 @@
     "express": "^4.16.3",
     "express-validator": "^5.3.0",
     "mocha": "^5.2.0",
-    "mongodb": "^3.1.8"
+    "mongodb": "^3.1.8",
+    "node-ses": "^2.1.0",
+    "wormhole-sdk": "^1.0.4"
   }
 }

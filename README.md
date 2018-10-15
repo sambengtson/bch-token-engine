@@ -9,3 +9,9 @@ whcprice - Indicates the price in USD that you would like to charge in exchange 
 production - Will switch between test and mainnet as well as host the website
 
 mongoUrl - Defaults to mongodb://localhost:27017
+
+sesaccessid - AWS access id for simple email service
+
+sesaccesskey - AWS access key for simple email service
+
+notificationemails - Email address for sending you notifications (Running out of WHC)
