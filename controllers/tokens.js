@@ -76,7 +76,7 @@ module.exports.IssueFixedToken = async (fixedToken) => {
         const msg = `${fixedToken.Name} has been created! <br /> <br />
         Issuing transaction: <a href="https://whc.btc.com/tx/${txId}">${txId}</a>
 
-        Your wallet has been credited with ${fixedToken.Amount} tokens.
+        Your wallet has been credited with ${fixedToken.Amount} tokens.  It may take up to 10 minutes for funds to appear in your wallet
         `
 
         email.SendEmail(fixedToken.Email, msg)
