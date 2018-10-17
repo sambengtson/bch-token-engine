@@ -2,6 +2,7 @@ const express = require('express')
 const expressValidator = require('express-validator');
 const app = express()
 const bodyParser = require("body-parser");
+const cors = require('cors')
 const port = 8080
 
 const global = require('./utilities/globals');
@@ -18,9 +19,10 @@ const tokenCtrl = require('./controllers/tokens');
 const isProduction = global.isProduction();
 
 if (isProduction) {
-    app.use(express.static('www/dist'))
+    app.use(express.static('www/dist'))    
 } else {
     app.get('/', (req, res) => res.send('BCH Token Engine'))
+    app.use(cors())
 }
 
 app.use(bodyParser.json());
@@ -40,7 +42,7 @@ let mainnetSocket = new BITBOX.Socket({
 })
 mainnetSocket.listen('transactions', (message) => {
     const tx = JSON.parse(message);
-    handleTx(tx, 'mainnet');
+    //handleTx(tx, 'mainnet');
 });
 
 let testnetSocket = new BITBOX.Socket({
@@ -61,6 +63,7 @@ function handleTx(tx, network) {
                     OneTimeAddr: addr,
                     Paid: false,
                     Network: network,
+                    IsEnabled: true
                 })
                 .then(row => {
                     if (row) {
@@ -70,6 +73,7 @@ function handleTx(tx, network) {
                             //continue;
                             row.PaidTx = tx.format.txid;
                             tokenCtrl.IssueFixedToken(row);
+                            console.log('Token issued!');
                         }
                     }
                 })

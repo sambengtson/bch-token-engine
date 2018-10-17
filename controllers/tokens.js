@@ -106,16 +106,15 @@ function findBiggestUtxo(utxos) {
   }
 
 module.exports.RecordFixedTokenReq = async (fixedToken) => {
-    if (!global.isProduction()) {
-        fixedToken.Network = 'testnet';
-    }
+
+    fixedToken.IsEnabled = true;
 
     if (fixedToken.Network === 'testnet') {
         if (!bbMain.Address.isTestnetAddress(fixedToken.CoinbaseAddress)) {
             throw 'Address is not a testnet address'
         }
     } else {
-        if (!bbMain.Address.isMainnetAddresss(fixedToken.CoinbaseAddress)) {
+        if (!bbMain.Address.isMainnetAddress(fixedToken.CoinbaseAddress)) {
             throw 'Address is not a mainnet address';
         }
     }
@@ -138,6 +137,17 @@ module.exports.RecordFixedTokenReq = async (fixedToken) => {
     response.Address = address;
     response.BchAmount = await price.GetTokenCreationPrice();
     fixedToken.Price = response.BchAmount;
+
+    const row = await mongo.db.collection('tokenrequests').findOne({
+        CoinbaseAddress: fixedToken.CoinbaseAddress,
+        Paid: false,
+        Network: fixedToken.Network,
+        IsEnabled: true
+    })
+
+    if (row) {
+        await mongo.db.collection('tokenrequests').updateOne({_id: row._id}, {$set: {IsEnabled: false}});
+    }
 
     const collection = mongo.db.collection('tokenrequests');
     await collection.insertOne(fixedToken);

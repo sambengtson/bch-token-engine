@@ -17,6 +17,7 @@ class FixedToken {
         this.OneTimeAddr = '';
         this.Price = 0;
         this.Email = ''
+        this.IsEnabled = true;
     }
 }
 
