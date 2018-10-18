@@ -2,7 +2,7 @@ const BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
 const BITBOX = new BITBOXSDK();
 
 module.exports.GetTokenCreationPrice = async  () => {
-    const price = 30;
+    let price = 30;
     if (process.env.tokenprice) {
         price = parseInt(process.env.tokenprice);
     }
@@ -15,7 +15,7 @@ module.exports.GetTokenCreationPrice = async  () => {
 }
 
 module.exports.GetWHCPrice = async () => {
-    const price = 15;
+    let price = 15;
     if (process.env.tokenprice) {
         price = parseInt(process.env.whcprice);
     }

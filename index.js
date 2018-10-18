@@ -16,10 +16,11 @@ const price = require('./routes/prices');
 const token = require('./routes/token');
 const tokenCtrl = require('./controllers/tokens');
 
-const isProduction = global.isProduction();
+const isProduction = true;
+//const isProduction = global.isProduction();
 
 if (isProduction) {
-    app.use(express.static('www/dist'))    
+    app.use(express.static('www/dist/www'))    
 } else {
     app.get('/', (req, res) => res.send('BCH Token Engine'))
     app.use(cors())
@@ -42,14 +43,14 @@ let mainnetSocket = new BITBOX.Socket({
 })
 mainnetSocket.listen('transactions', (message) => {
     const tx = JSON.parse(message);
-    //handleTx(tx, 'mainnet');
+    handleTx(tx, 'mainnet');
 });
 
 let testnetSocket = new BITBOX.Socket({
     callback: () => {
         console.log('connected')
     },
-    restURL: 'https://trest.bitcoin.com'
+    restURL: 'http://decatur.hopto.org:3003/v1/'
 })
 testnetSocket.listen('transactions', (message) => {
     const tx = JSON.parse(message);

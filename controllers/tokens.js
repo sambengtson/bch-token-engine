@@ -28,16 +28,18 @@ module.exports.IssueFixedToken = async (fixedToken) => {
     try {
         let wormhole = wormholeMain;
         let BITBOX = bbMain
+        let wif = process.env.wif
         if (fixedToken.Network === 'testnet') {
             wormhole = wormholeTest;
             BITBOX = bbTest;
+            wif = process.env.testwif;
         }
 
-        const ecPair = BITBOX.ECPair.fromWIF(process.env.wif);
+        const ecPair = BITBOX.ECPair.fromWIF(wif);
         const address = BITBOX.ECPair.toCashAddress(ecPair);
 
         const balances = await wormhole.DataRetrieval.balancesForAddress(address);
-        let whcBalance = balances.find(o => o.propertyid === 1);
+        const whcBalance = balances.find(o => o.propertyid === 1);
         if (!whcBalance || parseFloat(whcBalance.balance) < 1) {
             console.log('Not enough WHC tokens')
             email.SendEmail(process.env.notificationemails, 'You have run out of WHC!!!')
@@ -71,7 +73,11 @@ module.exports.IssueFixedToken = async (fixedToken) => {
         fixedToken.Issued = true;
         fixedToken.IssueTx = txId;
 
-        await mongo.db.collection('tokenrequests').updateOne({_id: fixedToken._id}, {$set: fixedToken});
+        await mongo.db.collection('tokenrequests').updateOne({
+            _id: fixedToken._id
+        }, {
+            $set: fixedToken
+        });
 
         const msg = `${fixedToken.Name} has been created! <br /> <br />
         Issuing transaction: <a href="https://whc.btc.com/tx/${txId}">${txId}</a>
@@ -91,19 +97,19 @@ module.exports.IssueFixedToken = async (fixedToken) => {
 function findBiggestUtxo(utxos) {
     let largestAmount = 0;
     let largestIndex = 0;
-  
+
     for (var i = 0; i < utxos.length; i++) {
-      const thisUtxo = utxos[i];
-      thisUtxo.value = thisUtxo.amount;
-  
-      if (thisUtxo.satoshis > largestAmount) {
-        largestAmount = thisUtxo.satoshis;
-        largestIndex = i;
-      }
+        const thisUtxo = utxos[i];
+        thisUtxo.value = thisUtxo.amount;
+
+        if (thisUtxo.satoshis > largestAmount) {
+            largestAmount = thisUtxo.satoshis;
+            largestIndex = i;
+        }
     }
-  
+
     return [utxos[largestIndex]];
-  }
+}
 
 module.exports.RecordFixedTokenReq = async (fixedToken) => {
 
@@ -146,7 +152,13 @@ module.exports.RecordFixedTokenReq = async (fixedToken) => {
     })
 
     if (row) {
-        await mongo.db.collection('tokenrequests').updateOne({_id: row._id}, {$set: {IsEnabled: false}});
+        await mongo.db.collection('tokenrequests').updateOne({
+            _id: row._id
+        }, {
+            $set: {
+                IsEnabled: false
+            }
+        });
     }
 
     const collection = mongo.db.collection('tokenrequests');

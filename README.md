@@ -15,3 +15,7 @@ sesaccessid - AWS access id for simple email service
 sesaccesskey - AWS access key for simple email service
 
 notificationemails - Email address for sending you notifications (Running out of WHC)
+
+wif - PK for mainnet acct
+
+testwif - PK for testnet acct
