@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './assets/scss/variables';
+@import '~ngx-toastr/toastr.css';
+
+body {
+    margin: 0;
+    background-color: $body-bg;
+}
+
+.navbar-default {
+  // color: $navbar-default-color;
+  // background-color: #fff;
+  background-color: #f7941d;
+  // background-color: $navbar-default-bg;
+  // border: $navbar-default-border;
+  border-radius: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-family-sexy;
+}
+

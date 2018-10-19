@@ -7,7 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   @ViewChild('template') modal: any;
@@ -22,15 +22,15 @@ export class AppComponent {
   }
 
   async process() {
-    try{
+    try {
       this.loading = true;
       /* Form should have validated data */
-      this.response = await this.api.CreateTokenRequest(this.token);      
+      this.response = await this.api.CreateTokenRequest(this.token);
       this.loading = false;
       this.modalService.show(this.modal);
 
       this.token = new Token();
-    } catch(err) {
+    } catch (err) {
       this.toast.error(err.error, 'Unable to create token');
       this.loading = false;
     }
