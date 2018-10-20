@@ -9,12 +9,13 @@ body {
 }
 
 .navbar-default {
-  // color: $navbar-default-color;
-  // background-color: #fff;
-  background-color: #f7941d;
-  // background-color: $navbar-default-bg;
-  // border: $navbar-default-border;
+  background-color: #4d4d4d;
+  border: $navbar-default-border;
   border-radius: 0;
+}
+
+.nav-link {
+  color: white !important;
 }
 
 h1,
