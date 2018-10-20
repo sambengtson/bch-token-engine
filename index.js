@@ -10,14 +10,17 @@ const mongo = require('./utilities/db');
 
 let BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
 let BITBOX = new BITBOXSDK();
+let BitcoinCashZMQDecoder = require('bitcoincash-zmq-decoder');
+
+let zmq = require('zeromq'),
+  sock = zmq.socket('sub');
 
 /* Routes */
 const price = require('./routes/prices');
 const token = require('./routes/token');
 const tokenCtrl = require('./controllers/tokens');
 
-const isProduction = true;
-//const isProduction = global.isProduction();
+const isProduction = global.isProduction();
 
 if (isProduction) {
     app.use(express.static('www/dist/www'))    
@@ -35,16 +38,22 @@ token.SetRoutes(app);
 
 app.listen(port, () => console.log(`Listening on port ${port}!`))
 
-let mainnetSocket = new BITBOX.Socket({
-    callback: () => {
-        console.log('connected')
-    },
-    restURL: 'https://rest.bitcoin.com'
-})
-mainnetSocket.listen('transactions', (message) => {
-    const tx = JSON.parse(message);
-    handleTx(tx, 'mainnet');
-});
+let bitcoincashZmqDecoder = new BitcoinCashZMQDecoder();
+sock.on('message', (topic, message) => {
+    let decoded = topic.toString('ascii');
+    if (decoded === 'rawtx') {
+      let txd = bitcoincashZmqDecoder.decodeTransaction(message);
+      handleTx(txd, 'mainnet')
+    }
+  });
+  
+  sock.on('bind_error', (fd, ep) => {
+    console.log('zmq connected')
+  })
+  
+  sock.connect(`tcp://${process.env.ZEROMQ_URL}:${process.env.ZEROMQ_PORT}`);
+  sock.subscribe('raw');
+
 
 let testnetSocket = new BITBOX.Socket({
     callback: () => {

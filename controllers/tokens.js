@@ -7,7 +7,6 @@ const {
 const email = require('../utilities/email');
 
 const price = require('../controllers/price');
-const global = require('../utilities/globals');
 const BITBOXSDK = require('bitbox-sdk/lib/bitbox-sdk').default;
 const bbTest = new BITBOXSDK({
     restURL: 'http://decatur.hopto.org:3003/v1/'
@@ -89,6 +88,7 @@ module.exports.IssueFixedToken = async (fixedToken) => {
 
     } catch (err) {
         //Notify somebody
+        console.log(err)
         email.SendEmail(fixedToken.Email, `There has been an error when attempting to create ${fixedToken.Name}.  Our team is looking into this issue and will email you with an update within 24 hours`);
         email.SendEmail(process.env.notificationemails, err);
     }
@@ -132,7 +132,12 @@ module.exports.RecordFixedTokenReq = async (fixedToken) => {
     let lang = langs[Math.floor(Math.random() * langs.length)];
     let mnemonic = bbMain.Mnemonic.generate(256, bbMain.Mnemonic.wordLists()[lang])
     let rootSeed = bbMain.Mnemonic.toSeed(mnemonic)
-    let masterHDNode = bbMain.HDNode.fromSeed(rootSeed, fixedToken.Network)
+    let masterHDNode = undefined;
+    if (fixedToken.Network === 'mainnet') {
+        masterHDNode = bbMain.HDNode.fromSeed(rootSeed)
+    } else {
+        masterHDNode = bbMain.HDNode.fromSeed(rootSeed, fixedToken.Network)
+    }
     const wif = bbMain.HDNode.toWIF(masterHDNode);
     const address = bbMain.HDNode.toCashAddress(masterHDNode);
 
