@@ -29,17 +29,17 @@
       <div class="row">
         <div class="col">
           <input type="number" class="form-control" min="0" max="10" step="1" name="precision" [(ngModel)]="token.Precision"
-            placeholder="Precision (1-10)" required>
+            placeholder="Precision (0-10)" required>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <input type="text" class="form-control" placeholder="Name" name="name" [(ngModel)]="token.Name" required>
+          <input type="text" class="form-control" placeholder="Name of Token" name="name" [(ngModel)]="token.Name" required>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <input type="text" class="form-control" placeholder="Category" name="category" [(ngModel)]="token.Category"
+          <input type="text" class="form-control" placeholder="Category (ex. Finance)" name="category" [(ngModel)]="token.Category"
             required>
         </div>
       </div>
@@ -64,7 +64,7 @@
         <div class="col">
           <select class="form-control" name="network" [(ngModel)]="token.Network" aria-placeholder="Network" required>
             <option value="mainnet">Mainnet</option>
-            <option value="testnet">Testnet</option>
+            <option value="testnet" disabled>Testnet - Coming soon</option>
           </select>
         </div>
       </div>

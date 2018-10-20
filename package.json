@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "bitbox-sdk": "^2.0.1",
+    "bitcoincash-zmq-decoder": "^0.1.5",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
@@ -22,6 +23,7 @@
     "mocha": "^5.2.0",
     "mongodb": "^3.1.8",
     "node-ses": "^2.1.0",
-    "wormhole-sdk": "^1.0.4"
+    "wormhole-sdk": "^1.0.4",
+    "zeromq": "^5.1.0"
   }
 }

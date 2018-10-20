@@ -19,3 +19,7 @@ notificationemails - Email address for sending you notifications (Running out of
 wif - PK for mainnet acct
 
 testwif - PK for testnet acct
+
+ZEROMQ_URL - Url of bitcoin cash full node
+
+ZEROMQ_PORT - Port of ZeroMQ 
