@@ -1,0 +1,54 @@
+@import url(https://fonts.googleapis.com/css?family=Playfair+Display:900|Lato:300);
+@import '../assets/scss/variables';
+
+
+.center-content {
+  text-align: center;
+  padding:45px 25px 55px 25px;
+  width: 800px;
+  margin: 0 auto;
+}
+
+.footer-content {
+  background-color: #fff;
+  text-align: center;
+  padding:45px 25px 55px 25px;
+  margin: 0 auto;
+}
+
+.well-dark {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #1c1e22;
+  border: 1px solid #0c0d0e;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.text-center {
+  color: #fff !important;
+  text-align: center !important;
+}
+
+.display-lg {
+  font-size: 5.5rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.btn-sexy-blue {
+    color: #fff;
+    background-color: #1496E1;
+    border-color: #1496E1;
+}
+
+.qrCode {
+  text-align: left;
+  width: 200px;
+  background-color: #eee;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

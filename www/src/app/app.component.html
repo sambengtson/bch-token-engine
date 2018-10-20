@@ -7,74 +7,101 @@
     <label class="center">{{response.Address}} </label>
     <br />
     <br />
-    <p>Upon receiving payment, your tokens will immediately be issued.  We will also send you a confirmation email</p>
+    <p>Upon receiving payment, your tokens will immediately be issued. We will also send you a confirmation email</p>
   </div>
 </ng-template>
 
-<div class="hero">
-  <div class="hero__image" style="background-image: url('assets/bg.jpg');" id="ParallaxImage"></div>
-  <div class="hero__content" id="ParallaxContent">
-    <h1>WHC Tokens</h1>
-    <h4>Build a custom token on Bitcoin Cash</h4>
+<nav class="navbar navbar-default">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+      aria-expanded="false">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <!-- <a class="navbar-brand" href="#"> </a> We can add our brand here later --> 
   </div>
-</div>
-
-<div class="copy">
-  <h2>Proudly built on</h2>
-  <h3><img src="https://www.bitcoincash.org/media-kit/6-bitcoin-cash-logo-horizontal-small.png"></h3>
-  <p>In roughly 10 minutes, you can issue your very own decentralized token!</p>
-
-  <form (submit)="process()" ngNativeValidate>
-    <div>
-      <div class="row">
-        <div class="col">
-          <input type="number" class="form-control" min="0" max="10" step="1" name="precision" [(ngModel)]="token.Precision"
-            placeholder="Precision (0-10)" required>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <input type="text" class="form-control" placeholder="Name of Token" name="name" [(ngModel)]="token.Name" required>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <input type="text" class="form-control" placeholder="Category (ex. Finance)" name="category" [(ngModel)]="token.Category"
-            required>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <input type="number" class="form-control" min="1" name="amount" placeholder="Amount to issue" [(ngModel)]="token.Amount"
-            required>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <input type="text" class="form-control" name="addr" placeholder="Receiving Address (bitcoincash:address)"
-            [(ngModel)]="token.CoinbaseAddress" required>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="token.Email" required>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <select class="form-control" name="network" [(ngModel)]="token.Network" aria-placeholder="Network" required>
-            <option value="mainnet">Mainnet</option>
-            <option value="testnet" disabled>Testnet - Coming soon</option>
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <button type="submit" [disabled]="loading" class="btn btn-primary">Create Token!</button>
-        </div>
+  <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false" style="height: 1px;">
+    <ul class="nav navbar-nav navbar-right">
+      <li><a class="nav-link" href="https://bitcoin.com" target="_blank">Bitcoin.com</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <div class="center-content text-center">
+      <h1 class="display-lg">WHC Tokens</h1>
+      <p class="lead">Create a custom token on Bitcoin Cash.</p>
+    </div>
+    <!-- <div>
+        <p>In roughly 10 minutes, you can issue your very own decentralized token!</p>
+      </div> -->
+  </div>
+  <div class="row">
+    <div class="center-content text-center">
+      <div class="well well-dark">
+        <form class="form-horizontal" (submit)="process()" ngNativeValidate>
+          <fieldset>
+            <div class="form-group">
+              <label for="precision" class="col-lg-2 control-label">Precision</label>
+              <div class="col-lg-10">
+                <input type="number" class="form-control" min="0" max="10" step="1" name="precision" [(ngModel)]="token.Precision"
+                  placeholder="(1-10)" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="name" class="col-lg-2 control-label">Token Name</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="e.g. LitCoin, FamCoin, etc.. " name="name"
+                  [(ngModel)]="token.Name" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="category" class="col-lg-2 control-label">Category</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="Token category" name="category" [(ngModel)]="token.Category"
+                  required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="addr" class="col-lg-2 control-label">Address</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" name="addr" placeholder="Receiving Address (bitcoincash:address)"
+                  [(ngModel)]="token.CoinbaseAddress" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email" class="col-lg-2 control-label">Email</label>
+              <div class="col-lg-10">
+                <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="token.Email"
+                  required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="network" class="col-lg-2 control-label">Network</label>
+              <div class="col-lg-10">
+                <select class="form-control" name="network" [(ngModel)]="token.Network" aria-placeholder="Network"
+                  required>
+                  <option value="mainnet">Mainnet</option>
+                  <option value="testnet">Testnet</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-lg-10 col-lg-offset-2">
+                <button type="submit" [disabled]="loading" class="btn btn-sexy-blue">Create Token!</button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
-  </form>
-
-  <p><a href="https://bitcoin.com" target="_blank">Bitcoin.com</a></p>
+  </div>
+  <div class="row">
+    <div class="footer-content">
+      <h2>Proudly built on</h2>
+      <h3><img src="https://www.bitcoincash.org/media-kit/6-bitcoin-cash-logo-horizontal-small.png"></h3>
+    </div>
+  </div>
 </div>
