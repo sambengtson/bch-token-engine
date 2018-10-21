@@ -67,6 +67,11 @@ testnetSocket.listen('transactions', (message) => {
 });
 
 function handleTx(tx, network) {
+    if (!mongo.db) {
+        console.log('Db not ready');
+        return;
+    }
+    
     for (const output of tx.outputs) {
         for (const addr of output.scriptPubKey.addresses) {
             mongo.db.collection('tokenrequests').findOne({
